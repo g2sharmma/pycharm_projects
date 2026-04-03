@@ -1,0 +1,176 @@
+"to crate a table"
+
+CREATE TABLE employees (em_id INT, first_name VARCHAR(20), last_name VARCHAR(20),
+                       salary DECIMAL(5, 2));
+					   
+SELECT * FROM employees;
+
+
+"adding content to table"
+
+
+INSERT INTO employees 
+VALUES				(1, "Shashi", "B", 50000.00),
+                    (2, "Yash", "G", 60000.00),
+                    (3, "Jitu", "S", 67000.00),
+                    (4, "Neeraja", "T", 87000.80);
+					
+					
+DELETE FROM employees;
+
+
+DELETE FROM employees
+WHERE em_id = 3;
+
+
+INSERT INTO employees (em_id, first_name, last_name)
+VALUES					(3, "Virat", "Kohli");
+
+
+
+"while updating row with certain conditions, we cannot combine WHERE clause with INSERT"  (to achieve this we have to use UPDATE clause)
+
+INSERT INTO employees (salary)
+VALUES (98000.00)
+WHERE first_name = "Virat";
+
+
+
+UPDATE employees
+SET salary = 98000.00
+WHERE first_name = "Virat";
+
+
+"to add extra column to existing table"
+
+ALTER TABLE employees
+ADD COLUMN email VARCHAR(50);
+
+
+
+"second highest salary"
+
+
+
+
+SELECT *
+FROM customers
+ORDER BY age DESC LIMIT 1 OFFSET 1;
+
+
+
+
+SELECT DISTINCT age
+FROM customers
+ORDER BY age DESC LIMIT 1 OFFSET 1;
+
+
+
+
+
+
+
+
+SELECT item, COUNT(*) 
+FROM orders
+GROUP BY item
+HAVING COUNT(item) > 1;
+
+
+
+
+************************************************************************************************
+
+1. highest salary
+
+select max(salary) from customers
+where salary < (select max(salary) from customers);
+
+
+*************************************************************************************************
+
+2. salary greater than average salary
+
+select * from employees
+where salary > (select avg(salary) from employees);
+
+
+*************************************************************************************************
+
+3. query for current date and time
+
+select current_timestamp;
+
+
+*************************************************************************************************
+
+4. How to find duplicate records in a table
+
+select column_name, count(*) from table
+gruop by column_name
+having count(*) > 1;
+
+
+*************************************************************************************************
+
+5. rank() vs dense_rank() vs row_number()
+
+
+select first_name, age,
+rank() over (order by age) as rank
+from customers;
+
+
+output: ((leaving a gap))
+
+first_name	age	rank
+Robert	22	1
+David	22	1
+John	25	3
+Betty	28	4
+John	31	5
+
+
+select first_name, age,
+dense_rank() over (order by age desc) as dense_rank
+from customers;
+
+
+output: ((leaving no gap)
+
+first_name	age	dense_rank
+John	31	1
+Betty	28	2
+John	25	3
+Robert	22	4
+David	22	4
+
+
+select first_name, age,
+row_number() over (order by age desc) as row_number
+from customers;
+
+output:
+
+first_name	age	row_number
+John	31	1
+Betty	28	2
+John	25	3
+Robert	22	4
+David	22	5
+
+
+****************************************************************************************************************
+
+
+
+
+with salesrecord as (
+  select salesperson, salesamount,
+rank() over (partition by salesperson order by salesamount) as rank
+from sales
+)
+
+select salesperson, salesamount
+from salesrecord
+where rank > 1;

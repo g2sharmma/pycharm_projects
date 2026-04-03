@@ -1,0 +1,899 @@
+creating table:
+==============
+
+CREATE TABLE employees (
+			employee_id INT,
+  			first_name VARCHAR(20),
+  			last_name VARCHAR(20),
+  			hourly_pay DECIMAL (5,2),
+  			joining_date DATE
+
+);
+
+SELECT * FROM employees;                          (This will create an empty table)
+
+***********************************************************************************************
+
+drop a table:
+============
+
+DROP TABLE employees;
+
+alter table:
+============
+
+ALTER TABLE employees
+
+ADD phone_number VARCHAR(15);
+
+
+Employees
+employee_id	first_name	last_name	hourly_pay	joining_date	phone_number
+empty
+
+************************************************************************************************
+
+ALTER TABLE employees
+
+RENAME COLUMN phone_number TO email;
+
+
+Employees
+employee_id	first_name	last_name	hourly_pay	joining_date	email
+empty
+
+
+
+ALTER TABLE employees
+
+MODIFY COLUMN email VARCHAR(100);
+
+***********************************************************************************************
+
+ALTER TABLE employees
+
+MODIFY email VARCHAR(100)
+AFTER last_name;                                   (this will set the column email after last_name)
+
+
+ALTER TABLE employees
+
+MODIFY email VARCHAR(100)
+FIRST;                                           (this will set the column email at beginning)
+
+
+ALTER TABLE employees
+
+DROP COLUMN email;                               (this will drop the column from table)
+
+
+
+**************************************************************************************************
+
+
+insert rows into a table:
+=========================
+
+insert into employees
+values (1, "Jitu", "Sharma", 500, "2021-12-09");
+
+
+
+insert into employees                                             (to store multiple values)
+values (1, "Jitu", "Sharma", 500, "2021-12-09"),
+		(2, "John", "Doe", 300, "2022-12-09"),
+		(3, "Corey", "Schafer", 1500, "2023-12-09"),
+        (4, "Jane", "Sa", 700, "2020-12-09");
+		
+		
+
+insert into employees (employee_id, first_name, last_name)           (this will store only selected column values in the table) 
+values (5, "Jack", "Sparrow");
+
+
+*******************************************************************************************************
+
+SELECT:
+======
+
+SELECT * FROM employees
+
+
+SELECT * FROM employees
+WHERE employee_id == 1;
+
+
+SELECT first_name, last_name
+FROM employees;
+
+
+SELECT * FROM employees
+WHERE hourly_pay >= 500;
+
+
+
+SELECT * FROM employees
+WHERE joining_date <= "2022-12-09"; 
+
+
+SELECT * FROM employees
+WHERE joining_date IS NULL;             (here = will not work while compairing with NULL)
+
+
+**********************************************************************************************************
+
+
+UPDATE & DELETE:
+===============
+
+UPDATE employees
+SET hourly_pay = 600
+WHERE employee_id = 5;
+SELECT * FROM employees;
+
+
+UPDATE employees
+SET hourly_pay = 800,
+	joining_date = "2024-06-01"
+WHERE employee_id = 5;
+SELECT * FROM employees;
+		
+		
+UPDATE employees
+SET hourly_pay = 1000
+SELECT * FROM employees;                 (this will set same value for all the employees in the table for hourly_pay column because the WHERE clause is excluded)
+
+
+DELETE FROM employees
+WHERE employee_id = 5;
+SELECT * FROM employees;                    *****(while using DELETE clause make sure to use WHERE clause, otherwise it will delete entire table data)
+
+
+**********************************************************************************************************
+
+
+AUTOCOMMIT, COMMIT, ROLLBACK:  (for making manual changes)
+============================
+
+AUTOCOMMIT is useful when we dont want our data to delete entirely. If we set AUTOCOMMIT = OFF and the COMMIT 
+then it will store the data even if we want to delete it can be resote using ROLLBACK clause.
+
+By default AUTOCOMMIT is set to ON.
+
+
+***********************************************************************************************************
+
+
+
+CURRENT_DATE() & CURRENT_TIME():
+===============================
+
+CREATE TABLE test (my_date, my_time, my_datetime)
+INSERT INTO test 
+VALUES(CURRENT_DATE(), CURRENT_TIME(), NOW());
+SELECT * FROM test;
+
+
+
+************************************************************************************************************
+
+
+UNIQUE:
+======
+
+CREATE TABLE products (
+			product_id INT,
+			product_name VARCHAR(50) UNIQUE,
+			price DECIMAL(5, 2)
+
+);
+
+INSERT INTO products
+VALUES (100, "fries", 2.99), 
+		(101, "chicken fry", 5.99), 
+		(102, "burger", 1.99);
+		
+		
+******************************************************************************************************************
+
+
+NOT NULL:
+=========
+
+CREATE TABLE products (
+			product_id INT,
+			product_name VARCHAR(50) UNIQUE,
+			price DECIMAL(5, 2) NOT NULL
+
+);
+
+
+******************************************************************************************************************
+
+
+CHECK:
+=====
+
+CREATE TABLE employees (
+			employee_id INT,
+  			first_name VARCHAR(20),
+  			last_name VARCHAR(20),
+  			hourly_pay DECIMAL (5,2),
+  			joining_date DATE
+			CHECK (hourly_pay >= 10.00)
+
+);
+
+
+
+
+CREATE TABLE employees (
+			employee_id INT,
+  			first_name VARCHAR(20),
+  			last_name VARCHAR(20),
+  			hourly_pay DECIMAL (5,2),
+  			joining_date DATE
+			CONSTRAINT chk_hourly_pay CHECK (hourly_pay >= 10.00)
+
+);
+
+
+ALTER TABLE employees
+DROP CHECK chk_hourly_pay;
+
+
+******************************************************************************************************************
+
+
+DEFAULT:
+=======
+
+
+CREATE TABLE products (
+			product_id INT,
+			product_name VARCHAR(50),
+			price DECIMAL(5, 2) DEFAULT 0
+
+);
+
+
+INSERT INTO products (product_id, product_name)
+VALUES (103, 'straw'),
+		(104, 'napkins'),
+		(105, 'fork'),
+		(106, 'spoon');
+		
+SELECT * FROM products;                         (here by default price would be set to 0)
+		
+		
+	
+
+	
+CREATE TABLE transactions (
+		transaction_id INT,
+		transaction_amount DECIMAL(4, 2),
+ 		transaction_date DATETIME DEFAULT NOW()                  (here if we don't sepcify the transaction_date then by default it will take the current datetime)
+
+);
+
+
+
+
+******************************************************************************************************************
+
+
+PRIMERY KEY:
+===========
+
+"There can be multiple people with name Ramesh Dutta but to identify a particular person, we can do this by certain ID proof such as PAN card, similarly primary key works in sql"
+
+"There can be only one primary key in a table"
+
+
+CREATE TABLE transactions (
+		transaction_id INT PRIMERY KEY,
+		transaction_amount DECIMAL(4, 2)
+		
+);
+
+SELECT * FROM transactions;
+
+
+to add a primary key to a table that already exist:
+===================================================
+
+ALTER TABLE transactions
+ADD CONSTRAINT
+PRIMERY KEY (transaction_id);
+
+
+
+
+******************************************************************************************************************
+
+
+AUTO_INCREMENT:
+===============
+
+
+CREATE TABLE transactions (
+		transaction_id INT PRIMERY KEY AUTO_INCREMENT,                          (by default AUTO_INCREMENT will be set to 1)
+		transaction_amount DECIMAL(4, 2)
+		
+);
+
+INSERT INTO transactions (amount)
+VALUES (4.99),
+		(3.78),
+		(4.81)
+		
+
+"If you want the AUTO_INCREMENT to start from other than value 1 then we can alter the table and set AUTO_INCREMENT to that value"
+
+
+ALTER TABLE transactions
+AUTO_INCREMENT = 1000;
+		
+
+
+
+
+******************************************************************************************************************
+
+
+FOREIGN KEYS:
+==============
+
+using foreign key we can establish relation between two tables.
+
+
+CREATE TABLE transactions (
+		transaction_id INT PRIMERY KEY AUTO_INCREMENT,                      
+		transaction_amount DECIMAL(4, 2),
+		customer_id INT,
+		FOREIGN KEY(customer_id) REFRENCES customers(customer_id)                                           (here customers is also a table)
+		
+);
+
+
+
+
+
+******************************************************************************************************************
+
+
+
+JOINS:
+======
+
+
+Join is a clause that is used to combine rows from two ore more tables based on a related column between them such as a foreign key.
+
+INNER JOIN:
+==========
+
+SELECT * FROM transactions INNER JOIN customers                       (here transactions table is on the left)
+ON transactions.customer_id = customers.customer_id               
+
+
+LEFT JOIN:
+==========
+
+
+SELECT * FROM transactions LEFT JOIN customers                       
+ON transactions.customer_id = customers.customer_id        
+
+
+RIGHT JOIN:
+===========       
+
+SELECT * FROM transactions RIGHT JOIN customers                       
+ON transactions.customer_id = customers.customer_id        
+
+
+
+
+
+******************************************************************************************************************
+
+
+FUNCTIONS:
+==========
+
+
+SELECT COUNT(amount) FROM transactions;
+
+
+
+SELECT COUNT(amount) AS "today's transaction" FROM transactions;
+
+
+
+SELECT MAX(amount) FROM transactions;
+
+
+SELECT MAX(amount) AS maximum FROM transactions;
+
+
+
+SELECT MIN(amount) AS minumum FROM transactions;
+
+
+
+SELECT AVG(amount) FROM transactions;
+
+
+
+SELECT SUM(amount) FROM transactions;
+
+
+
+SELECT CONCAT(first_name, " ", last_name) AS full_name FROM employees;
+
+
+
+
+******************************************************************************************************************
+
+
+AND, OR, NOT:
+============
+
+
+SELECT * FROM employees
+WHERE job = "cook" AND joining_date < "2023-01-05";
+
+
+
+SELECT * FROM employees
+WHERE job = "cook" OR job = "cashier";
+
+
+SELECT * FROM employees
+WHERE NOT job = "manager";
+
+
+
+
+SELECT * FROM employees
+WHERE joining_date BETWEEN "2022-01-01" AND "2024-01-01";
+
+
+SELECT * FROM employees
+WHERE job IN ("cashier", "manager");
+
+
+
+
+******************************************************************************************************************
+
+
+WILD CARDS:
+===========
+
+wild card characters(%, _): used to substitute one or more characters in a string.
+
+
+
+
+
+SELECT * FROM employees
+WHERE first_name = "s";             (this will not check whether first_name starts with character "s" or not)
+
+
+
+
+SELECT * FROM employees
+WHERE first_name LIKE "s%";           (when LIKE used with WHERE clause it acts like a searching agent) 
+									(here % means one or more than one match for char "s" in first_name column)
+									
+									
+
+
+
+SELECT * FROM employees
+WHERE job LIKE "_ook";
+
+
+
+SELECT * FROM employees
+WHERE job LIKE "__ok";
+
+
+
+SELECT * FROM employees
+WHERE joining_date LIKE "____-01-__";
+
+
+SELECT * FROM employees
+WHERE joining_date LIKE "2023-__-__";
+
+
+
+
+
+SELECT * FROM employees
+WHERE job LIKE "_a%";                (select those from job column where second char is "a" and we don't care about the first char and lenght of the job as well (%))
+
+
+
+ 
+
+  
+******************************************************************************************************************
+
+
+
+ORDER BY:
+=========
+
+
+SELECT * FROM employees
+ORDER BY last_name;                    (by default ascending)
+
+
+SELECT * FROM employees
+ORDER BY last_name DESC;               (descending)
+
+
+
+******************************************************************************************************************
+
+
+LIMIT:
+======
+
+LIMIT clause is used to limit the no. of records.
+useful if working with large datasets.
+can be used to display a large data on pages (pagination)
+
+
+SELECT * FROM customers
+LIMIT 1;
+
+
+SELECT * FROM customers
+LIMIT 3;
+
+
+SELECT * FROM customers
+LIMIT 5;
+
+
+SELECT * FROM customers
+LIMIT 10, 5;
+
+
+
+
+******************************************************************************************************************
+
+
+UNION:
+=======
+
+
+combine the results of two or more SELECT statements.
+
+
+SELECT * FROM employees
+UNION
+SELECT * FROM customers;             (no. of column in both the table should be same)
+									(UNION will not allow duplicate elements)
+									
+									(however duplicate elements can be there by using UNION ALL clause)
+
+
+
+
+
+SELECT * FROM employees
+UNION ALL
+SELECT * FROM customers;
+
+
+
+
+******************************************************************************************************************
+
+
+SELF JOINS:
+===========
+
+join another copy of a table to itself.
+used to compare rows of the same table.
+helps to display hierarchy of data.
+
+
+Q. How to create an empty column in a table ?
+
+
+ALTER TABLE customers
+ADD referral_id INT;
+
+
+Q. How to initialize value to the column ?
+
+UPDATE customers
+SET referral_id = 1
+WHERE employee_id = 2;
+
+
+
+
+SELECT * 
+FROM customers AS a
+INNER JOIN customers as b
+ON a.referral_id = b.customer_id;
+
+
+
+ 
+SELECT a.customer_id, a.first_name, a.last_name,
+			CONCAT(b.first_name, " ", b.last_name) AS "reffered by"
+FROM customers AS a
+INNER JOIN customers as b
+ON a.referral_id = b.customer_id;
+
+
+
+
+
+******************************************************************************************************************
+
+
+VIEWS:
+======
+
+
+A virtual table based on the result set of an sql statement. 
+any changes made in actual table will also result in virtual table and vice-versa. (for example: inserting a row).
+
+
+CREATE VIEWS employee_attendance AS
+SELCET first_name, last_name 
+FROM employees;
+
+
+
+
+******************************************************************************************************************
+
+
+INDEXES:         (similar to Binary Tree in Data Structure)
+========
+
+used to find values within a specific column more quickly.
+MySQL normally searches sequentially through a column.
+The longer the column, the more expensive the operation is
+UPDATE takes more time, SELCET takes less time.
+
+
+
+CREATE INDEX last_name_first_name_idx
+ON customers(last_name, first_name);
+
+SHOW INDEXES FROM customers;
+
+SELCET * FROM customers
+WHERE last_name = "Puff" AND first_name = "Poppy";    (this will search faster because last_name and first_name column is having indexes which is an example of multi indexing)
+
+
+
+
+******************************************************************************************************************
+
+
+SUBQUERIES:
+==========
+
+a query within another query.
+
+SELECT AVG(hourly_pay) FROM employees      (this entire thing becomes on query)
+
+Now if we pass this query to another query then this will be called subquery.
+
+
+
+SELCET first_name, last_name, hourly_pay,
+		(SELECT AVG(hourly_pay) FROM employees) AS avg_pay
+FROM employees;
+
+
+
+SELCET first_name, last_name, hourly_pay FROM employees
+WHERE hourly_pay > (SELECT AVG(hourly_pay) FROM employees);
+
+
+
+******************************************************************************************************************
+
+
+GROUP BY:
+========
+
+aggregate all rows by a specific column
+often used with aggregate functions such as SUM(), MIN(), MAX(), AVG(), COUNT()
+
+
+SELECT SUM(amount), customer_id
+FROM transactions
+GROUP BY customer_id;
+
+
+
+******************************************************************************************************************
+
+ROLL UP:
+========
+
+extension of GROOUP BY clause.
+produces another row and shows the GRAND TOTAL (super aggregate value)
+
+
+
+SELCET COUNT(transaction_id), order_date
+FROM transactions
+GROOUP BY order_date WITH ROLLUP;
+
+
+
+******************************************************************************************************************
+
+
+ON DELETE:
+==========
+
+ON DELETE SET NULL: when a foreign key deleted, replace foreign key with NULL
+ON DELETE CASCADE: when a foreign key deleted, delete row
+
+
+
+******************************************************************************************************************
+
+
+stored procedures:
+=================
+
+stored procedure is a prepared sql code that you can save.
+great use when there's a query you write often.
+
+
+
+
+CREATE PROCEDURE get_customers()
+BEGIN
+	SELECT * FROM customers;                        (Here the ; gets confused b/w this line and END; line to avoid this we can use delimeter (\\ or $$))
+END;
+
+
+CALL get_customers();
+
+
+
+
+DELIMETER $$
+CREATE PROCEDURE get_customers()
+BEGIN
+	SELECT * FROM customers;                        \
+END $$
+
+
+CALL get_customers();
+
+
+
+
+"passing argument to the procedure"
+
+DELIMITER $$
+CREATE PROCEDURE find_customer(IN id INT)
+BEGIN
+	SELECT * FROM customers
+	WHERE customer_id = id;
+END $$
+DELIMITER ;
+
+
+CALL find_customer(1);
+
+
+DROP PROCEDURE find_customer();
+
+
+
+
+
+"passing multiple arguments to the procedure"
+
+
+DELIMETER $$
+CREATE PROCEDURE find_customer(IN f_name VARCHAR(20), IN l_name VARCHAR(20))
+BEGIN
+	SELECT * FROM customers
+	WHERE first_name = f_name AND last_name = l_name;
+END $$
+DELIMETER ;
+
+
+CALL find_customer("Larry", "Lobster");
+
+
+
+
+
+
+******************************************************************************************************************
+
+
+trigger:
+=======
+
+
+when an event happens to something
+for example (INSERT, UPDATE, DELETE)
+
+checks data, handles error, auditing tables.
+
+
+
+
+ALTER TABLE employees
+ADD COLUMN salary DECIMAL(10,2) AFTER hourly_pay;
+
+
+UPDATE employees
+SET salary = hourly_pay * 2080
+SELECT * FROM employees;                          (here the salary will be updated based on hourly_pay but to apply these changes permanantly we will use trigger)
+
+
+
+
+"lets see how we can use trigger"
+
+
+CREATE TRIGGER before_hourly_pay_update
+BEFORE UPDATE ON employees
+FOR EACH ROW
+SET NEW.salary = (NEW.hourly_pay * 2080);
+
+
+
+"now lets see how trigger works"
+
+
+UPDATE employees
+SET hourly_pay = 50
+WHERE employee_id = 1;
+SELCET * FROM employees;                   (this will update the employee 1 salary based on new hourly_pay without affecting the others employee)
+
+
+
+
+"lets increment every employee hourly_pay by 1 and update the salary"
+
+
+UPDATE employees
+SET hourly_pay = hourly_pay + 1;
+SELECT * FROM employees;
+
+
+
+"create trigger for insert"
+
+
+CREATE TRIGGER before_hourly_pay_insert
+BEFORE INSERT ON employees
+FOR EACH ROW
+SET NEW.salary = (NEW.hourly_pay * 2080);
+
+
+INSERT INTO employees
+VALUES (7, "Jimmy", "Anderson", 100, NULL, "cricketer", "2023-01-07", 5);               (here NULL is set for salary initially, however it will get updated based on hourly_pay)
+SELECT * FROM employees;
+
+
+
+
+
+
